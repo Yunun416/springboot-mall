@@ -118,11 +118,14 @@ public class ProductDaoImpl implements ProductDao{
         ProductCategory category = productQueryParam.getCategory();
         Integer starPrice = productQueryParam.getStarPrice();
         Integer endPrice = productQueryParam.getEndPrice();
+        String orderBy = productQueryParam.getOrderBy();
+        String sort = productQueryParam.getSort();
+        System.out.println("orderBy:"+orderBy);
+        System.out.println("orderBy:"+sort);
 
         if (search != null){
             sql += "AND product_name LIKE :product_name ";
             map.put("product_name", "%" + search + "%");
-
         }
 
         if (category != null){
@@ -140,7 +143,10 @@ public class ProductDaoImpl implements ProductDao{
             map.put("endPrice", endPrice);
         }
 
-        System.out.println("sql:"+sql);
+        sql += "ORDER BY " + orderBy + " " + sort;
+
+        System.out.println(sql);
+
 
         List<Product> query = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
         return query;

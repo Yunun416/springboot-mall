@@ -36,21 +36,22 @@ public class ProductController {
     public ResponseEntity<List<Product>> readProducts(@RequestParam(required = false) String search,
                                                       @RequestParam(required = false) ProductCategory category,
                                                       @RequestParam(required = false) Integer starPrice,
-                                                      @RequestParam(required = false) Integer endPrice){
+                                                      @RequestParam(required = false) Integer endPrice,
+                                                      @RequestParam(defaultValue = "created_date") String orderBy,
+                                                      @RequestParam(defaultValue = "DESC") String sort){
 
         ProductQueryParam productQueryParam = new ProductQueryParam();
         productQueryParam.setSearch(search);
         productQueryParam.setCategory(category);
         productQueryParam.setStarPrice(starPrice);
         productQueryParam.setEndPrice(endPrice);
+        productQueryParam.setOrderBy(orderBy);
+        productQueryParam.setSort(sort);
 
         List<Product> productList = productService.getProducts(productQueryParam);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
-
     }
-
-
 
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody @Valid ProductRequest productRequest) {
