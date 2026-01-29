@@ -6,6 +6,7 @@ import com.yun.springbootmall.dto.ProductRequest;
 import com.yun.springbootmall.model.Product;
 
 import com.yun.springbootmall.service.ProductService;
+import com.yun.springbootmall.util.QueryInfo;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -37,7 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> readProducts(
+    public ResponseEntity<QueryInfo<Product>> readProducts(
             //查詢條件 Filtering
             @RequestParam(required = false) String search,
             @RequestParam(required = false) ProductCategory category,
@@ -63,8 +64,15 @@ public class ProductController {
         productQueryParam.setLimit(limit);
 
         List<Product> productList = productService.getProducts(productQueryParam);
+        Integer countProducts = productService.countProducts(productQueryParam);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+        QueryInfo<Product> queryInfo = new QueryInfo<>();
+        queryInfo.setResult(productList);
+        queryInfo.setPage(page);
+        queryInfo.setLimit(limit);
+        queryInfo.setTotal(countProducts);
+
+        return ResponseEntity.status(HttpStatus.OK).body(queryInfo);
     }
 
     @PostMapping("/products")

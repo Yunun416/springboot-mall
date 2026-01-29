@@ -5,6 +5,7 @@ import com.yun.springbootmall.dto.ProductQueryParam;
 import com.yun.springbootmall.dto.ProductRequest;
 import com.yun.springbootmall.model.Product;
 import com.yun.springbootmall.rowmapper.ProductRowMapper;
+import com.yun.springbootmall.util.QueryInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -114,37 +115,17 @@ public class ProductDaoImpl implements ProductDao{
 
         Map<String, Object> map = new HashMap<>();
 
-        String search = productQueryParam.getSearch();
-        ProductCategory category = productQueryParam.getCategory();
-        Integer starPrice = productQueryParam.getStarPrice();
-        Integer endPrice = productQueryParam.getEndPrice();
         String orderBy = productQueryParam.getOrderBy();
         String sort = productQueryParam.getSort();
         Integer page = productQueryParam.getPage();
         Integer limit = productQueryParam.getLimit();
 
-        if (search != null){
-            sql += " AND product_name LIKE :product_name";
-            map.put("product_name", "%" + search + "%");
-        }
+        sql += addFilteringSql(productQueryParam, map);
 
-        if (category != null){
-            sql += " AND category = :category";
-            map.put("category", category.name());
-        }
-
-        if (starPrice != null){
-            sql += " AND price >= :starPrice";
-            map.put("starPrice", starPrice);
-        }
-
-        if (endPrice != null){
-            sql += " AND price <= :endPrice";
-            map.put("endPrice", endPrice);
-        }
-
+        // 排序 Sorting
         sql += " ORDER BY " + orderBy + " " + sort;
 
+        // 分頁 Pagination
         if (page.equals(1)){
             sql += " LIMIT " + limit;
         }else {
@@ -156,6 +137,50 @@ public class ProductDaoImpl implements ProductDao{
 
 
         List<Product> query = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
+
         return query;
+    }
+
+    @Override
+    public Integer countProducts(ProductQueryParam productQueryParam) {
+        String sql = "SELECT COUNT(*)" +
+                " FROM product WHERE 1=1";
+
+        Map<String, Object> map = new HashMap<>();
+
+        sql += addFilteringSql(productQueryParam, map);
+
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return total;
+    }
+
+    //查詢條件 Filtering
+    private String addFilteringSql(ProductQueryParam productQueryParam, Map<String, Object> map){
+        String sqlWhere = "";
+        String search = productQueryParam.getSearch();
+        ProductCategory category = productQueryParam.getCategory();
+        Integer starPrice = productQueryParam.getStarPrice();
+        Integer endPrice = productQueryParam.getEndPrice();
+
+        if (search != null){
+            sqlWhere += " AND product_name LIKE :product_name";
+            map.put("product_name", "%" + search + "%");
+        }
+
+        if (category != null){
+            sqlWhere += " AND category = :category";
+            map.put("category", category.name());
+        }
+
+        if (starPrice != null){
+            sqlWhere += " AND price >= :starPrice";
+            map.put("starPrice", starPrice);
+        }
+
+        if (endPrice != null){
+            sqlWhere += " AND price <= :endPrice";
+            map.put("endPrice", endPrice);
+        }
+        return sqlWhere;
     }
 }
