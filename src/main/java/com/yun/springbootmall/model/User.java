@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Date;
 
 public class User {
-    private Integer user_id;
+    private Integer userId;
     private String email;
 
     @JsonIgnore
@@ -14,12 +14,12 @@ public class User {
     private Date createdDate;
     private Date lastModifiedDate;
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
