@@ -9,4 +9,7 @@ public interface UserDao {
     public User findUserId(Integer id);
 
     public User getUserEmail(String email);
+
+    public User login(UserRequest userRequest);
+
 }

@@ -7,4 +7,6 @@ public interface UserService {
     public Integer register( UserRequest userRequest);
 
     public User findUserId(Integer id);
+
+    public User login(UserRequest userRequest);
 }

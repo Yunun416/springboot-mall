@@ -22,4 +22,10 @@ public class UserController {
         User resUser = userService.findUserId(userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(resUser);
     }
+
+    @PostMapping("users/login")
+    public ResponseEntity<User> login(@RequestBody @Valid UserRequest userRequest){
+        User resUser = userService.login(userRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(resUser);
+    }
 }

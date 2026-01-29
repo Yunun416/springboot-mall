@@ -75,4 +75,22 @@ public class UserDaoImpl implements UserDao{
 
         return query.stream().findFirst().orElse(null);
     }
+
+    @Override
+    public User login(UserRequest userRequest) {
+        String sql = "SELECT user_id, email, password, created_date, last_modified_date" +
+                " FROM user" +
+                " WHERE 1=1" +
+                " AND email = :email";
+
+        String email = userRequest.getEmail();
+        String password = userRequest.getPassword();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("email", email);
+
+        List<User> query = namedParameterJdbcTemplate.query(sql, map, new UserRowMapper());
+        return query.stream().findFirst().orElse(null);
+
+    }
 }
