@@ -70,7 +70,6 @@ public class ProductDaoImpl implements ProductDao{
     public Integer updateProduct(Integer id, ProductRequest productRequest) {
         String sql = "UPDATE product " +
                 "SET product_name = :product_name, " +
-                "product_name = :product_name, " +
                 "category = :category, " +
                 "image_url = :image_url, " +
                 "price = :price, " +

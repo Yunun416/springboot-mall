@@ -90,8 +90,8 @@ public class ProductController {
         Product product = productService.findById(productId);
 
         if (product != null){
-            Integer resproductId = productService.updateProduct(productId, productRequest);
-            Product resProduct = productService.findById(resproductId);
+            Integer resProductId = productService.updateProduct(productId, productRequest);
+            Product resProduct = productService.findById(resProductId);
             return ResponseEntity.status(HttpStatus.OK).body(resProduct);
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
