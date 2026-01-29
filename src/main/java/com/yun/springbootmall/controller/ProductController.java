@@ -7,14 +7,18 @@ import com.yun.springbootmall.model.Product;
 
 import com.yun.springbootmall.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 public class ProductController {
 
@@ -33,12 +37,20 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> readProducts(@RequestParam(required = false) String search,
-                                                      @RequestParam(required = false) ProductCategory category,
-                                                      @RequestParam(required = false) Integer starPrice,
-                                                      @RequestParam(required = false) Integer endPrice,
-                                                      @RequestParam(defaultValue = "created_date") String orderBy,
-                                                      @RequestParam(defaultValue = "DESC") String sort){
+    public ResponseEntity<List<Product>> readProducts(
+            //查詢條件 Filtering
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) Integer starPrice,
+            @RequestParam(required = false) Integer endPrice,
+
+            // 排序 Sorting
+            @RequestParam(defaultValue = "created_date") String orderBy,
+            @RequestParam(defaultValue = "DESC") String sort,
+
+            // 分頁 Pagination
+            @RequestParam(defaultValue = "1") @Min(1) Integer page,
+            @RequestParam(defaultValue = "2") @Max(50) @Min(0) Integer limit){
 
         ProductQueryParam productQueryParam = new ProductQueryParam();
         productQueryParam.setSearch(search);
@@ -47,6 +59,8 @@ public class ProductController {
         productQueryParam.setEndPrice(endPrice);
         productQueryParam.setOrderBy(orderBy);
         productQueryParam.setSort(sort);
+        productQueryParam.setPage(page);
+        productQueryParam.setLimit(limit);
 
         List<Product> productList = productService.getProducts(productQueryParam);
 

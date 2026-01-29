@@ -3,12 +3,14 @@ package com.yun.springbootmall.dto;
 import com.yun.springbootmall.constant.ProductCategory;
 
 public class ProductQueryParam {
-    String search;
-    ProductCategory category;
-    Integer starPrice;
-    Integer endPrice;
-    String orderBy;
-    String sort;
+    private String search;
+    private ProductCategory category;
+    private Integer starPrice;
+    private Integer endPrice;
+    private String orderBy;
+    private String sort;
+    private Integer page;
+    private Integer limit;
 
     public String getSearch() {
         return search;
@@ -56,5 +58,21 @@ public class ProductQueryParam {
 
     public void setSort(String sort) {
         this.sort = sort;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 }

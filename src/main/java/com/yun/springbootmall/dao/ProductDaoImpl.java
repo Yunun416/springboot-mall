@@ -108,9 +108,9 @@ public class ProductDaoImpl implements ProductDao{
 
     @Override
     public List<Product> getProducts(ProductQueryParam productQueryParam) {
-        String sql = "SELECT product_id, product_name, category, image_url, price, " +
-                "stock, description, created_date, last_modified_date " +
-                "FROM product WHERE 1=1 ";
+        String sql = "SELECT product_id, product_name, category, image_url, price" +
+                " ,stock, description, created_date, last_modified_date" +
+                " FROM product WHERE 1=1";
 
         Map<String, Object> map = new HashMap<>();
 
@@ -120,30 +120,37 @@ public class ProductDaoImpl implements ProductDao{
         Integer endPrice = productQueryParam.getEndPrice();
         String orderBy = productQueryParam.getOrderBy();
         String sort = productQueryParam.getSort();
-        System.out.println("orderBy:"+orderBy);
-        System.out.println("orderBy:"+sort);
+        Integer page = productQueryParam.getPage();
+        Integer limit = productQueryParam.getLimit();
 
         if (search != null){
-            sql += "AND product_name LIKE :product_name ";
+            sql += " AND product_name LIKE :product_name";
             map.put("product_name", "%" + search + "%");
         }
 
         if (category != null){
-            sql += "AND category = :category ";
+            sql += " AND category = :category";
             map.put("category", category.name());
         }
 
         if (starPrice != null){
-            sql += "AND price >= :starPrice ";
+            sql += " AND price >= :starPrice";
             map.put("starPrice", starPrice);
         }
 
         if (endPrice != null){
-            sql += "AND price <= :endPrice ";
+            sql += " AND price <= :endPrice";
             map.put("endPrice", endPrice);
         }
 
-        sql += "ORDER BY " + orderBy + " " + sort;
+        sql += " ORDER BY " + orderBy + " " + sort;
+
+        if (page.equals(1)){
+            sql += " LIMIT " + limit;
+        }else {
+            Integer OFFSET = (page - 1) * limit;
+            sql += " LIMIT " + limit + " OFFSET " + OFFSET;
+        }
 
         System.out.println(sql);
 

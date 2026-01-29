@@ -18,6 +18,5 @@ public interface ProductService {
     public void deleteProduct(Integer id);
 
     public List<Product> getProducts(ProductQueryParam productQueryParam);
-
 }
 
