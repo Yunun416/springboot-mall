@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public User findUserId(Integer id) {
+    public User findUserById(Integer id) {
 
         String sql = "SELECT user_id, email, password, created_date, last_modified_date"
                 + " FROM  user"

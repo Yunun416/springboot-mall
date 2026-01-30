@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 public interface ProductService {
-    public Product findById(Integer id);
+    public Product findProductById(Integer id);
 
     public Integer createProduct(ProductRequest productRequest);
 

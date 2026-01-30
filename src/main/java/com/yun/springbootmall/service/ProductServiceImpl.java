@@ -17,8 +17,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDao productDao;
 
-    public Product findById(Integer id){
-        return productDao.findById(id);
+    public Product findProductById(Integer id){
+        return productDao.findProductById(id);
     }
 
     @Override

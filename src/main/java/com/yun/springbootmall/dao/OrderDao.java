@@ -10,8 +10,6 @@ import java.util.List;
 public interface OrderDao {
     public Integer createOrder(OrderRequest orderRequest);
 
-    public List<Product> findProductById(OrderRequest orderRequest);
-
     public void createOrderItems(Integer orderId, OrderRequest orderRequest);
 
     public Order findOrderById(Integer orderId);

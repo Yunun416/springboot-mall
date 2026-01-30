@@ -1,6 +1,8 @@
 package com.yun.springbootmall.dao;
 
 import com.yun.springbootmall.constant.ProductCategory;
+import com.yun.springbootmall.dto.OrderItemRequest;
+import com.yun.springbootmall.dto.OrderRequest;
 import com.yun.springbootmall.dto.ProductQueryParam;
 import com.yun.springbootmall.dto.ProductRequest;
 import com.yun.springbootmall.model.Product;
@@ -13,10 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ProductDaoImpl implements ProductDao{
@@ -25,7 +24,7 @@ public class ProductDaoImpl implements ProductDao{
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public Product findById(Integer id) {
+    public Product findProductById(Integer id) {
         String sql = "SELECT product_id, product_name, category, image_url, price, " +
                         "stock, description, created_date, last_modified_date " +
                         "FROM product " +
@@ -38,6 +37,29 @@ public class ProductDaoImpl implements ProductDao{
 
         //找第一個，沒找到回傳 null
         return query.stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public List<Product> findProductsById(OrderRequest orderRequest) {
+
+        String sql = "SELECT product_id, product_name, category, image_url, price," +
+                " stock, description, created_date, last_modified_date" +
+                " FROM product" +
+                " WHERE 1=1" +
+                " AND product_id IN(:productIds)"
+                ;
+
+        List<Integer> productIds = new ArrayList<>();
+
+        for (OrderItemRequest orderItemRequest : orderRequest.getOrderItemList()){
+            Integer productId = orderItemRequest.getProductId();
+            productIds.add(productId);
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productIds", productIds);
+
+        return namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
     }
 
     @Override
@@ -92,6 +114,32 @@ public class ProductDaoImpl implements ProductDao{
 
         namedParameterJdbcTemplate.update(sql, map);
         return id;
+    }
+
+    @Override
+    public void updateProductStock(Map<Integer, Integer> mapRenewStock) {
+        Date now = new Date();
+        String sql = "UPDATE product" +
+                    " SET stock = :stock," +
+                    " last_modified_date = :lastModifiedDate" +
+                    " WHERE 1=1" +
+                    " AND product_id = :productId"
+                    ;
+
+        MapSqlParameterSource[] mapSqlParameterSources = new MapSqlParameterSource[mapRenewStock.size()];
+
+        int i = 0;
+        for (Map.Entry<Integer, Integer> entry : mapRenewStock.entrySet()) {
+            Integer productId = entry.getKey();
+            Integer renewStock = entry.getValue();
+            mapSqlParameterSources[i] = new MapSqlParameterSource();
+            mapSqlParameterSources[i].addValue("productId", productId);
+            mapSqlParameterSources[i].addValue("stock", renewStock);
+            mapSqlParameterSources[i].addValue("lastModifiedDate", now);
+            i++;
+        }
+
+        namedParameterJdbcTemplate.batchUpdate(sql, mapSqlParameterSources);
     }
 
     @Override

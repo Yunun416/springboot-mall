@@ -23,29 +23,6 @@ public class OrderDaoImpl implements OrderDao{
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> findProductById(OrderRequest orderRequest) {
-
-        String sql = "SELECT product_id, product_name, category, image_url, price," +
-                " stock, description, created_date, last_modified_date" +
-                " FROM product" +
-                " WHERE 1=1" +
-                " AND product_id IN(:productIds)"
-                ;
-
-        List<Integer> productIds = new ArrayList<>();
-
-        for (OrderItemRequest orderItemRequest : orderRequest.getOrderItemList()){
-            Integer productId = orderItemRequest.getProductId();
-            productIds.add(productId);
-        }
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("productIds", productIds);
-
-        return namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
-    }
-
-    @Override
     public Order findOrderById(Integer orderId) {
 
         String sql = "SELECT order_id, user_id, total_amount, created_date, last_modified_date" +
