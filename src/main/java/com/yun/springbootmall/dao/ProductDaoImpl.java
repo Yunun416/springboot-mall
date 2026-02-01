@@ -40,7 +40,7 @@ public class ProductDaoImpl implements ProductDao{
     }
 
     @Override
-    public List<Product> findProductsById(OrderRequest orderRequest) {
+    public List<Product> findProductsById(List<Integer> productIds) {
 
         String sql = "SELECT product_id, product_name, category, image_url, price," +
                 " stock, description, created_date, last_modified_date" +
@@ -48,13 +48,6 @@ public class ProductDaoImpl implements ProductDao{
                 " WHERE 1=1" +
                 " AND product_id IN(:productIds)"
                 ;
-
-        List<Integer> productIds = new ArrayList<>();
-
-        for (OrderItemRequest orderItemRequest : orderRequest.getOrderItemList()){
-            Integer productId = orderItemRequest.getProductId();
-            productIds.add(productId);
-        }
 
         Map<String, Object> map = new HashMap<>();
         map.put("productIds", productIds);

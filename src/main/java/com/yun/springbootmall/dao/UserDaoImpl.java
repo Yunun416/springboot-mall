@@ -11,10 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class UserDaoImpl implements UserDao{
@@ -56,9 +53,9 @@ public class UserDaoImpl implements UserDao{
         Map<String, Object> map = new HashMap<>();
         map.put("user_id", id);
 
-        List<User> query = namedParameterJdbcTemplate.query(sql, map, new UserRowMapper());
+        User resUser = namedParameterJdbcTemplate.queryForObject(sql, map, new UserRowMapper());
 
-        return query.stream().findFirst().orElse(null);
+        return resUser;
     }
 
     @Override
@@ -93,4 +90,5 @@ public class UserDaoImpl implements UserDao{
         return query.stream().findFirst().orElse(null);
 
     }
+
 }

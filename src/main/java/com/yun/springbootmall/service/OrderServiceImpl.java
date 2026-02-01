@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,14 @@ public class OrderServiceImpl implements OrderService{
         int totalAmount = 0;
 
         // 查商品庫存 & 價錢
-        List<Product> productList = productDao.findProductsById(orderRequest);
+        List<Integer> productIds = new ArrayList<>();
+
+        for (OrderItemRequest orderItemRequest : orderRequest.getOrderItemList()){
+            Integer productId = orderItemRequest.getProductId();
+            productIds.add(productId);
+        }
+
+        List<Product> productList = productDao.findProductsById(productIds);
 
         // 存查的商品現況
         Map<String, Object> map = new HashMap<>();

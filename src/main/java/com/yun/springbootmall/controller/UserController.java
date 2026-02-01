@@ -7,9 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -17,14 +15,14 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/users/register")
-    public ResponseEntity<User> register(@RequestBody @Valid UserRequest userRequest){
+    public ResponseEntity<User> register(@RequestBody @Valid UserRequest userRequest) {
         Integer userId = userService.register(userRequest);
         User resUser = userService.findUserById(userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(resUser);
     }
 
     @PostMapping("users/login")
-    public ResponseEntity<User> login(@RequestBody @Valid UserRequest userRequest){
+    public ResponseEntity<User> login(@RequestBody @Valid UserRequest userRequest) {
         User resUser = userService.login(userRequest);
         return ResponseEntity.status(HttpStatus.OK).body(resUser);
     }

@@ -9,4 +9,5 @@ public interface UserService {
     public User findUserById(Integer id);
 
     public User login(UserRequest userRequest);
+
 }

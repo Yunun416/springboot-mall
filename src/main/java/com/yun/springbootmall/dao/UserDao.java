@@ -11,5 +11,4 @@ public interface UserDao {
     public User getUserEmail(String email);
 
     public User login(UserRequest userRequest);
-
 }
