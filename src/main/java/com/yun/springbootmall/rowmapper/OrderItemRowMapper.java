@@ -11,13 +11,13 @@ public class OrderItemRowMapper implements RowMapper<OrderItem> {
     public OrderItem mapRow(ResultSet rs, int rowNum) throws SQLException {
 
         OrderItem orderItem = new OrderItem();
-        orderItem.setOrderId(rs.getInt("o.order_id"));
-        orderItem.setOrderItemId(rs.getInt("o.order_item_id"));
-        orderItem.setProductId(rs.getInt("o.product_id"));
-        orderItem.setQuantity(rs.getInt("o.quantity"));
-        orderItem.setAmount(rs.getInt("o.amount"));
-        orderItem.setProductName(rs.getString("p.product_name"));
-        orderItem.setImageUrl(rs.getString("p.image_url"));
+        orderItem.setOrderId(rs.getInt("order_id"));
+        orderItem.setOrderItemId(rs.getInt("order_item_id"));
+        orderItem.setProductId(rs.getInt("product_id"));
+        orderItem.setQuantity(rs.getInt("quantity"));
+        orderItem.setAmount(rs.getInt("amount"));
+        orderItem.setProductName(rs.getString("product_name"));
+        orderItem.setImageUrl(rs.getString("image_url"));
         return orderItem;
     }
 }
